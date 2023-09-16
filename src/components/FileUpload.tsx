@@ -1,4 +1,5 @@
 "use client";
+import { uploadToS3 } from "@/lib/s3";
 import { Inbox, Loader2 } from "lucide-react";
 import React from "react";
 import { useDropzone } from "react-dropzone";
@@ -27,35 +28,38 @@ const FileUpload = () => {
     accept: { "application/pdf": [".pdf"] },
     maxFiles: 1,
     onDrop: async (acceptedFiles) => {
+      console.log('acceptedFiles', acceptedFiles);
       const file = acceptedFiles[0];
       if (file.size > 10 * 1024 * 1024) {
         // bigger than 10mb!
-        toast.error("File too large");
+        // toast.error("File too large");
+        alert('bigger than 10mb!')
         return;
       }
 
-    //   try {
-    //     setUploading(true);
-    //     const data = await uploadToS3(file);
-    //     if (!data?.file_key || !data.file_name) {
-    //       toast.error("Something went wrong");
-    //       return;
-    //     }
-    //     mutate(data, {
-    //       onSuccess: ({ chat_id }) => {
-    //         toast.success("Chat created!");
-    //         router.push(`/chat/${chat_id}`);
-    //       },
-    //       onError: (err) => {
-    //         toast.error("Error creating chat");
-    //         console.error(err);
-    //       },
-    //     });
-    //   } catch (error) {
-    //     console.log(error);
+      try {
+        // setUploading(true);
+        const data = await uploadToS3(file);
+        console.log("data", data)
+        // if (!data?.file_key || !data.file_name) {
+        //   toast.error("Something went wrong");
+        //   return;
+        // }
+        // mutate(data, {
+        //   onSuccess: ({ chat_id }) => {
+        //     toast.success("Chat created!");
+        //     router.push(`/chat/${chat_id}`);
+        //   },
+        //   onError: (err) => {
+        //     toast.error("Error creating chat");
+        //     console.error(err);
+        //   },
+        // });
+      } catch (error) {
+        console.log(error);
     //   } finally {
     //     setUploading(false);
-    //   }
+      }
     },
   });
   return (
